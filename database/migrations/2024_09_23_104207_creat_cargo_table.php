@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('cargo', function (Blueprint $table) {
+        Schema::create('cargos', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_trip');
-            $table->foreign('id_trip')->references('id')->on('trip');
+            $table->foreign('id_trip')->references('id')->on('trips');
             $table->integer('weight');
             $table->string('sender');
         });
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('cargo');
+        Schema::dropIfExists('cargos');
     }
 };
