@@ -5,7 +5,7 @@
     <title>609-41</title>
 </head>
 <body>
-<h2>{{$transport ? 'Список маршрутов транспорта: '.$transport->name : 'Неверный id трнаспорта'}}</h2>
+<h2>{{$transport ? 'Список маршрутов транспорта: '.$transport->name : 'Неверный id транспорта'}}</h2>
 @if($transport)
     <table border="1">
         <thead>

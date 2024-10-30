@@ -16,12 +16,19 @@ class Trip extends Model
     {
         return $this->hasMany(Cargo::class);
     }
+
     public function routes(): BelongsTo
     {
         return $this->belongsTo(Route::class, 'route_id', 'id');
     }
+
     public function transports(): BelongsTo
     {
-        return $this->belongsTo(Transport::class);
+        return $this->belongsTo(Transport::class, 'transport_id', 'id');
     }
+    protected $fillable = [
+        'start',
+        // другие поля, которые вы хотите разрешить для массового присвоения
+    ];
 }
+

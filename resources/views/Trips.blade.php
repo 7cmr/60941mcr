@@ -12,6 +12,8 @@
     <td>Начало</td>
     <td>Конец</td>
     <td>Маршрут</td>
+    <td>Транспорт</td>
+    <td>Действия</td>
     </thead>
     @foreach($trips as $trip)
         <tr>
@@ -19,9 +21,15 @@
             <td>{{$trip->start}}</td>
             <td>{{$trip->finish}}</td>
             <td>{{$trip->routes->cities}}</td>
+            <td>{{$trip->transports->name}}</td>
+            <td>
+                <a href="{{url('trip/destroy/'.$trip->id)}}">Удалить</a>
+                <a href="{{url('trip/edit/'.$trip->id)}}">Редактировать</a>
+            </td>
         </tr>
     @endforeach
 </table>
 </body>
 </html>
+
 
