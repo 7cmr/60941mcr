@@ -10,10 +10,11 @@ use Illuminate\Http\Request;
 
 class TripController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $perpage = $request->perpage ?? 2;
         return view('trips', [
-            'trips' => Trip::all()
+            'trips' => Trip::paginate($perpage)->withQueryString(),
         ]);
     }
     public function create()

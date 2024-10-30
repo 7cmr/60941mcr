@@ -29,6 +29,7 @@
         </tr>
     @endforeach
 </table>
+{{ $trips->links() }}
 </body>
 </html>
 
