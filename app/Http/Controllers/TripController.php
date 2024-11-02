@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Route;
 use App\Models\Transport;
 use App\Models\Trip;
+use App\Models\User;
+use Illuminate\Auth\Access\Gate;
 use Illuminate\Http\Request;
 
 class TripController extends Controller
@@ -64,7 +66,14 @@ class TripController extends Controller
     }
     public function destroy(string $id)
     {
+        if (!\Illuminate\Support\Facades\Gate::allows('destroy-trip')){
+            return redirect('/error')->with('message',
+                'У вас нет прав администратора!', $id);
+        }
+
+
         Trip::destroy($id);
         return redirect('/trips');
+
     }
 }
