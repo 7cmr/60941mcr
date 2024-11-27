@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Http\Controllers\Controller;
 use App\Models\Route;
 use App\Models\Transport;
@@ -14,15 +12,17 @@ class TripController extends Controller
 {
     public function index(Request $request)
     {
-        $perpage = $request->perpage ?? 2;
+        $perpage = $request->perpage ?? 4;
         return view('trips', [
             'trips' => Trip::paginate($perpage)->withQueryString(),
         ]);
     }
+
     public function create()
     {
         return view('trip_create', ['transports' => Transport::all(), 'routes' => Route::all()]);
     }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -37,9 +37,12 @@ class TripController extends Controller
         $trip->transport_id = $validated['transport_id'];
         $trip->route_id = $validated['route_id'];
         $trip->save();
-        return redirect('/trips');
+        return redirect('/')->withErrors([
+            'success' => 'Рейс был успешно добавлен',
+        ]);
 
     }
+
     public function edit(string $id)
     {
         return view('trip_edit', [
@@ -48,6 +51,7 @@ class TripController extends Controller
             'routes' => Route::all()
         ]);
     }
+
     public function update(Request $request, string $id)
     {
         $validated = $request->validate([
@@ -62,18 +66,23 @@ class TripController extends Controller
         $trip->transport_id = $validated['transport_id'];
         $trip->route_id = $validated['route_id'];
         $trip->save();
-        return redirect('/trips');
+        return redirect('/')->withErrors([
+            'success' => 'Рейс был успешно изменен',
+        ]);
     }
+
     public function destroy(string $id)
     {
-        if (!\Illuminate\Support\Facades\Gate::allows('destroy-trip')){
-            return redirect('/error')->with('message',
-                'У вас нет прав администратора!', $id);
+        if (!auth()->check()) {
+            return redirect('/trips')->withErrors(['error' => 'Пожалуйста, авторизуйтесь для выполнения этого действия.']);
         }
 
+        if (!\Illuminate\Support\Facades\Gate::allows('destroy-trip', Trip::find($id))) {
+            return redirect('/trips')->withErrors(['error' => 'У вас нет прав администрирования!']);
+        }
 
+        // Удаление записи
         Trip::destroy($id);
-        return redirect('/trips');
-
+        return redirect('/trips')->withErrors(['error' => 'Запись удалена.']);
     }
 }

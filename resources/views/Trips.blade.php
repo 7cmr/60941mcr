@@ -1,36 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>609-41</title>
-</head>
-<body>
-<h2>Список рейсов</h2>
-<table border="1">
-    <thead>
-    <td>id</td>
-    <td>Начало</td>
-    <td>Конец</td>
-    <td>Маршрут</td>
-    <td>Транспорт</td>
-    <td>Действия</td>
-    </thead>
-    @foreach($trips as $trip)
-        <tr>
-            <td>{{$trip->id}}</td>
-            <td>{{$trip->start}}</td>
-            <td>{{$trip->finish}}</td>
-            <td>{{$trip->routes->cities}}</td>
-            <td>{{$trip->transports->name}}</td>
-            <td>
-                <a href="{{url('trip/destroy/'.$trip->id)}}">Удалить</a>
-                <a href="{{url('trip/edit/'.$trip->id)}}">Редактировать</a>
-            </td>
-        </tr>
-    @endforeach
-</table>
-{{ $trips->links() }}
-</body>
-</html>
+@extends('layout')
+@section('content')
+    <div class="container mt-5">
+        <h2 class="mb-4 text-center">Список рейсов</h2>
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+            <tr>
+                <th scope="col">Транспорт</th>
+                <th scope="col">Маршрут</th>
+                <th scope="col">Начало</th>
+                <th scope="col">Конец</th>
+                <th scope="col" class="text-center">Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            @forelse($trips as $trip)
+                <tr>
+                    <td>{{ $trip->transports->name }}</td>
+                    <td>{{ $trip->routes->cities }}</td>
+                    <td>{{ $trip->start }}</td>
+                    <td>{{ $trip->finish }}</td>
+                    <td class="text-center">
+                        <!-- Кнопка "Редактировать" -->
+                        <a href="{{ url('trip/edit/' . $trip->id) }}" class="btn btn-sm btn-primary mx-1">
+                            <i class="fa fa-pencil"></i> Редактировать
+                        </a>
+                        <form method="POST" action="{{ url('trip/destroy/' . $trip->id) }}" class="d-inline-block">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger mx-1">
+                                <i class="fa fa-trash"></i> Удалить
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="5" class="text-center">Данных о рейсах пока нет</td>
+                </tr>
+            @endforelse
+            </tbody>
+        </table>
+        <div class="pt-4 d-flex justify-content-center">
+            {{ $trips->links() }}
+        </div>
+    </div>
+@endsection
 
 
