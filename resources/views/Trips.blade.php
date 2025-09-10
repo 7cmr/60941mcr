@@ -20,17 +20,18 @@
                     <td>{{ $trip->start }}</td>
                     <td>{{ $trip->finish }}</td>
                     <td class="text-center">
-                        <!-- Кнопка "Редактировать" -->
-                        <a href="{{ url('trip/edit/' . $trip->id) }}" class="btn btn-sm btn-primary mx-1">
-                            <i class="fa fa-pencil"></i> Редактировать
-                        </a>
-                        <form method="POST" action="{{ url('trip/destroy/' . $trip->id) }}" class="d-inline-block">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-danger mx-1">
-                                <i class="fa fa-trash"></i> Удалить
-                            </button>
-                        </form>
+                        @auth
+                            <a href="{{ url('trip/edit/' . $trip->id) }}" class="btn btn-sm btn-primary mx-1">
+                                <i class="fa fa-pencil"></i> Редактировать
+                            </a>
+                            <form method="POST" action="{{ url('trip/destroy/' . $trip->id) }}" class="d-inline-block">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger mx-1">
+                                    <i class="fa fa-trash"></i> Удалить
+                                </button>
+                            </form>
+                        @endauth
                     </td>
                 </tr>
             @empty

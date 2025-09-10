@@ -73,9 +73,6 @@ class TripController extends Controller
 
     public function destroy(string $id)
     {
-        if (!auth()->check()) {
-            return redirect('/trips')->withErrors(['error' => 'Пожалуйста, авторизуйтесь для выполнения этого действия.']);
-        }
 
         if (!\Illuminate\Support\Facades\Gate::allows('destroy-trip', Trip::find($id))) {
             return redirect('/trips')->withErrors(['error' => 'У вас нет прав администрирования!']);
@@ -83,6 +80,6 @@ class TripController extends Controller
 
         // Удаление записи
         Trip::destroy($id);
-        return redirect('/trips')->withErrors(['error' => 'Запись удалена.']);
+        return redirect('/trips')->withErrors(['success' => 'Запись удалена.']);
     }
 }
