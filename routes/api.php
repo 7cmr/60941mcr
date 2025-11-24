@@ -20,9 +20,11 @@ Route::post('/login', [AuthController::class, 'login']);
 
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/transports', [TransportControllerApi::class, 'index']);
     Route::get('/user', function (Request $request) {
         return $request->user();
     });
     Route::get('/logout', [AuthController::class, 'logout']);
+
 });
+Route::get('/trips_total', [TripControllerApi::class, 'total']);
+Route::get('/transports_total', [TransportControllerApi::class, 'total']);

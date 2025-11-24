@@ -17,7 +17,6 @@ class TripController extends Controller
             'trips' => Trip::paginate($perpage)->withQueryString(),
         ]);
     }
-
     public function create()
     {
         return view('trip_create', ['transports' => Transport::all(), 'routes' => Route::all()]);
