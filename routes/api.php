@@ -24,6 +24,8 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
     Route::get('/logout', [AuthController::class, 'logout']);
+    Route::post('/trip', [TripControllerApi::class, 'store']);
+    Route::post('/transport', [TransportControllerApi::class, 'store']);
 
 });
 Route::get('/trips_total', [TripControllerApi::class, 'total']);

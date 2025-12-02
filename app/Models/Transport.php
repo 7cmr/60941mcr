@@ -17,4 +17,5 @@ class Transport extends Model
         return $this->belongsToMany(Route::class, 'trips')
             ->withPivot(['start', 'finish']);
     }
+    protected $fillable = ['name', 'capacity', 'picture_url'];
 }

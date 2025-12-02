@@ -3,9 +3,9 @@
 namespace App\Providers;
 
 use App\Models\User;
-use Illuminate\Auth\Access\Gate;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Gate;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,9 +24,13 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::defaultView('pagination::bootstrap-4');
 
-        \Illuminate\Support\Facades\Gate::define('destroy-trip', function (User $user) {
+        // Используем импортированный Gate (единообразно)
+        Gate::define('destroy-trip', function (User $user) {
             return $user->id == 1;
         });
 
+        Gate::define('create-transport', function (User $user) {
+            return true;
+        });
     }
 }

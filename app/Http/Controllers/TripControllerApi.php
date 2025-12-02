@@ -7,6 +7,7 @@ use App\Models\Transport;
 use App\Models\Trip;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 
 class TripControllerApi extends Controller
 {
@@ -34,5 +35,45 @@ class TripControllerApi extends Controller
     public function show(string $id)
     {
         return response(Trip::find($id));
+    }
+    public function store(Request $request)
+    {
+        if (! Gate::allows('create-trip')) {
+            return response()->json([
+                'code' => 1,
+                'message' => 'У вас нет прав на добавление рейса',
+            ]);
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|unique:trips|max:255',
+            'image' => 'required|file'
+        ]);
+
+        $file = $request->file('image');
+        // Генерация уникального имени файла
+        $fileName = rand(1, 100000) . '_' . $file->getClientOriginalName();
+
+        try {
+            // Загрузка файла в S3
+            $path = Storage::disk('s3')->putFileAs('trip_pictures', $file, $fileName);
+            // Получение URL загруженного файла
+            $fileUrl = Storage::disk('s3')->url($path);
+        }
+        catch (Exception $e){
+            return response()->json([
+                'code' => 2,
+                'message' => 'Ошибка загрузки файла в хранилище S3',
+            ]);
+        };
+
+        $trip = new Trip($validated);
+        $trip->picture_url = $fileUrl;
+        $trip->save();
+
+        return response()->json([
+            'code' => 0,
+            'message' => 'Категория успешно добавлена',
+        ]);
     }
 }
